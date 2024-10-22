@@ -11,10 +11,21 @@ contract Fibonacci {
         calling fibonacci(6) would return 8, because the 6th Fibonacci number is 8.
     */
 
-    function fibonacci(uint256 _position) public view returns (uint256) {
-        if (_position == 2) return 1;
-        if (_position == 1) return 1;
-        if (_position == 0) return 0;
-        return fibonacci(_position - 1) + fibonacci(_position - 2);
+    function fibonacci(uint256 _position) public pure returns (uint256) {
+        assembly {
+            let a := 0
+            if eq(_position, 0) {mstore(0x0, a) return (0x0, 32)}
+            let b := 1
+
+            for {let i := 2} lt(i, add(_position, 1)) { i := add(i, 1)} {
+                let temp := b
+                b := add(a, b)
+                a := temp
+            }
+
+            mstore(0x0, b)
+
+            return(0x0, 32)
+        }
     }
 }

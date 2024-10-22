@@ -3,10 +3,20 @@ pragma solidity ^0.8.13;
 
 contract IfStatement {
     function max(uint256 a, uint256 b) public pure returns (uint256) {
-        // return the maximum of a and b
+        assembly {
+            switch lt(a, b)
+            case 0 {mstore(0x0, a)}
+            case 1 {mstore(0x0, b)}
+            return(0x0, 32)
+        }
     }
 
     function min(uint256 a, uint256 b) public pure returns (uint256) {
-        // return the minimum of a and b
+        assembly {
+            switch gt(a, b)
+            case 0 {mstore(0x0, a)}
+            case 1 {mstore(0x0, b)}
+            return(0x0, 32)
+        }
     }
 }
